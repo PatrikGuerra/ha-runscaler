@@ -1,0 +1,77 @@
+# Example dashboard. In Home Assistant: Settings > Dashboards > Add > New from scratch,
+# then the three dots > Edit > Raw configuration editor, and paste this.
+title: Runscaler
+views:
+  - title: Status
+    path: status
+    cards:
+      - type: entities
+        entities:
+          - binary_sensor.runscaler_reachable
+          - binary_sensor.runscaler_connected
+          - sensor.runscaler_status
+          - sensor.runscaler_assigned_jobs
+          - sensor.runscaler_running_jobs
+          - sensor.runscaler_idle_runners
+          - sensor.runscaler_disk_free
+          - sensor.runscaler_last_error
+          - sensor.runscaler_version
+      - type: history-graph
+        hours_to_show: 48
+        entities:
+          - sensor.runscaler_running_jobs
+          - sensor.runscaler_jobs_completed
+  - title: Config
+    path: config
+    cards:
+      - type: entities
+        entities:
+          - text.runscaler_url
+          - text.runscaler_name
+          - number.runscaler_max_runners
+          - number.runscaler_concurrent
+          - number.runscaler_min_runners
+          - number.runscaler_docker_memory
+          - number.runscaler_docker_cpu
+          - number.runscaler_docker_pids_limit
+          - number.runscaler_drain_timeout
+          - text.runscaler_runner_image
+          - select.runscaler_log_level
+          - binary_sensor.runscaler_pending_changes
+          - sensor.runscaler_last_request
+      - type: horizontal-stack
+        cards:
+          - type: button
+            entity: button.runscaler_apply_config
+            tap_action:
+              action: toggle
+              confirmation:
+                text: Apply and restart runscaler? It waits for running jobs.
+          - type: button
+            entity: button.runscaler_discard_changes
+            tap_action: { action: toggle }
+  - title: Actions
+    path: actions
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: button
+            entity: button.runscaler_restart
+            tap_action:
+              action: toggle
+              confirmation:
+                text: Restart runscaler? It waits for running jobs.
+          - type: button
+            entity: button.runscaler_stop_now
+            tap_action:
+              action: toggle
+              confirmation:
+                text: Stop now? Running jobs are killed.
+  - title: Logs
+    path: logs
+    cards:
+      - type: markdown
+        content: |
+          ```
+          {{ (state_attr('sensor.runscaler_last_log_line', 'lines') or []) | join('\n') }}
+          ```

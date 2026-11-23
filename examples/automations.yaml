@@ -1,0 +1,35 @@
+# Example automations. Replace notify.mobile_app_phone with your own notify service.
+- alias: Runscaler disconnected from GitHub
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.runscaler_connected
+      to: "off"
+      for: "00:05:00"
+  actions:
+    - action: notify.mobile_app_phone
+      data:
+        title: Runscaler
+        message: The runner lost its connection to GitHub 5 minutes ago.
+
+- alias: Runscaler low disk
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.runscaler_disk_free
+      below: 15
+  actions:
+    - action: notify.mobile_app_phone
+      data:
+        title: Runscaler
+        message: "Free disk is {{ states('sensor.runscaler_disk_free') }}%."
+
+- alias: Runscaler request failed
+  triggers:
+    - trigger: event
+      event_type: runscaler_request_finished
+      event_data:
+        ok: false
+  actions:
+    - action: notify.mobile_app_phone
+      data:
+        title: Runscaler
+        message: "Request {{ trigger.event.data.kind }} {{ trigger.event.data.state }}: {{ trigger.event.data.error }}"

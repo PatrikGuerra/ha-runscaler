@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"   # same as Home Assistant 2026.11
+          cache: pip
+          cache-dependency-path: requirements_test.txt
+      - run: pip install -r requirements_test.txt
+      - run: pytest -q
+      - name: Translations are valid JSON and in sync
+        run: |
+          python - <<'EOF'
+          import json, pathlib
+          base = pathlib.Path("custom_components/runscaler")
+          def keys(d, p=""):
+              return {p + k for k, v in d.items()} | {x for k, v in d.items() if isinstance(v, dict) for x in keys(v, p + k + ".")}
+          ref = keys(json.loads((base / "strings.json").read_text()))
+          for f in (base / "translations").glob("*.json"):
+              diff = ref ^ keys(json.loads(f.read_text()))
+              assert not diff, f"{f.name}: {sorted(diff)}"
+          EOF
