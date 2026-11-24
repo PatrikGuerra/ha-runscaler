@@ -40,21 +40,42 @@ A copy of the fork's contract lives in `tests/fixtures/contract/`, and the tests
 
 ## Install
 
-1. Copy `custom_components/runscaler` to `/config/custom_components/runscaler` in Home Assistant. On the Pi, `/config` is `/opt/homeassistant/config`:
+### With HACS (recommended)
 
-   ```bash
-   scp -r custom_components/runscaler orange@192.168.1.118:/tmp/runscaler
-   ssh orange@192.168.1.118 'sudo mkdir -p /opt/homeassistant/config/custom_components && sudo rm -rf /opt/homeassistant/config/custom_components/runscaler && sudo mv /tmp/runscaler /opt/homeassistant/config/custom_components/'
-   ```
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=PatrikGuerra&repository=ha-runscaler&category=integration)
 
-2. Restart Home Assistant.
-3. Go to **Settings → Devices & services → Add integration** and search for **Runscaler**.
-4. Accept the defaults:
+1. Install [HACS](https://hacs.xyz/docs/use/download/download/) if you don't have it yet.
+2. In HACS, open **⋮ → Custom repositories**.
+3. Paste `https://github.com/PatrikGuerra/ha-runscaler`, pick type **Integration**, and click **Add**.
+4. Search for **Runscaler** in HACS and click **Download**.
+5. Restart Home Assistant.
+
+HACS shows new releases as updates in **Settings → Updates**.
+
+### Manually
+
+Copy `custom_components/runscaler` from the [latest release](https://github.com/PatrikGuerra/ha-runscaler/releases/latest) to `/config/custom_components/runscaler` in Home Assistant, then restart it. For a Home Assistant Container whose `/config` is `/opt/homeassistant/config` on the host:
+
+```bash
+scp -r custom_components/runscaler <user>@<host>:/tmp/runscaler
+ssh <user>@<host> 'sudo mkdir -p /opt/homeassistant/config/custom_components && sudo rm -rf /opt/homeassistant/config/custom_components/runscaler && sudo mv /tmp/runscaler /opt/homeassistant/config/custom_components/'
+```
+
+### Set it up
+
+1. Go to **Settings → Devices & services → Add integration** and search for **Runscaler**.
+2. Accept the defaults:
 
    | Field | Default |
    |---|---|
    | Health URL | `http://127.0.0.1:8089/healthz` |
    | Exchange folder | `/runscaler-exchange` |
+
+## Releasing
+
+1. Bump `version` in `custom_components/runscaler/manifest.json`, for example to `0.2.0`.
+2. Merge it, then push a matching tag: `git tag v0.2.0 && git push origin v0.2.0`.
+3. The `Release` workflow checks that the tag matches `manifest.json` and publishes a GitHub release. HACS picks it up.
 
 ## Entities
 

@@ -1,0 +1,28 @@
+name: Release
+
+# Push a tag vX.Y.Z that matches manifest.json; HACS installs from the GitHub release.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Tag matches manifest.json
+        run: |
+          manifest=$(jq -r .version custom_components/runscaler/manifest.json)
+          if [ "v$manifest" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match manifest.json version $manifest"
+            exit 1
+          fi
+      - name: Zip for manual installs
+        run: cd custom_components && zip -r ../runscaler.zip runscaler
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" runscaler.zip --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
