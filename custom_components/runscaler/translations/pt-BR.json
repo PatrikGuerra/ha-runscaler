@@ -1,0 +1,148 @@
+{
+    "config":  {
+                   "step":  {
+                                "user":  {
+                                             "title":  "Runscaler",
+                                             "description":  "Onde o Home Assistant acha o health do runscaler e a pasta de troca.",
+                                             "data":  {
+                                                          "health_url":  "URL do health",
+                                                          "exchange_dir":  "Pasta de troca"
+                                                      }
+                                         }
+                            },
+                   "error":  {
+                                 "cannot_connect":  "Não foi possível acessar a URL do health.",
+                                 "no_snapshot":  "O outbox/current-config.json não foi encontrado na pasta de troca."
+                             },
+                   "abort":  {
+                                 "already_configured":  "Esta pasta de troca já está configurada."
+                             }
+               },
+    "entity":  {
+                   "binary_sensor":  {
+                                         "reachable":  {
+                                                           "name":  "Acessível"
+                                                       },
+                                         "connected":  {
+                                                           "name":  "Conectado ao GitHub"
+                                                       },
+                                         "pending_changes":  {
+                                                                 "name":  "Mudanças não aplicadas"
+                                                             }
+                                     },
+                   "button":  {
+                                  "apply_config":  {
+                                                       "name":  "Aplicar config"
+                                                   },
+                                  "discard_changes":  {
+                                                          "name":  "Descartar mudanças"
+                                                      },
+                                  "restart":  {
+                                                  "name":  "Reiniciar (espera os jobs)"
+                                              },
+                                  "stop_now":  {
+                                                   "name":  "Parar agora"
+                                               }
+                              },
+                   "number":  {
+                                  "max_runners":  {
+                                                      "name":  "Máximo de runners"
+                                                  },
+                                  "concurrent":  {
+                                                     "name":  "Jobs simultâneos"
+                                                 },
+                                  "min_runners":  {
+                                                      "name":  "Mínimo de runners"
+                                                  },
+                                  "docker_memory":  {
+                                                        "name":  "Memória do runner"
+                                                    },
+                                  "docker_cpu":  {
+                                                     "name":  "CPUs do runner"
+                                                 },
+                                  "docker_pids_limit":  {
+                                                            "name":  "Limite de PIDs do runner"
+                                                        },
+                                  "drain_timeout":  {
+                                                        "name":  "Tempo de drain"
+                                                    }
+                              },
+                   "select":  {
+                                  "log_level":  {
+                                                    "state":  {
+                                                                  "debug":  "Debug",
+                                                                  "info":  "Info",
+                                                                  "warn":  "Warn",
+                                                                  "error":  "Error"
+                                                              },
+                                                    "name":  "Nível de log"
+                                                }
+                              },
+                   "sensor":  {
+                                  "status":  {
+                                                 "name":  "Status"
+                                             },
+                                  "assigned_jobs":  {
+                                                        "name":  "Jobs atribuídos"
+                                                    },
+                                  "running_jobs":  {
+                                                       "name":  "Jobs rodando"
+                                                   },
+                                  "idle_runners":  {
+                                                       "name":  "Runners livres"
+                                                   },
+                                  "jobs_started":  {
+                                                       "name":  "Jobs iniciados"
+                                                   },
+                                  "jobs_completed":  {
+                                                         "name":  "Jobs concluídos"
+                                                     },
+                                  "disk_free":  {
+                                                    "name":  "Disco livre"
+                                                },
+                                  "last_error":  {
+                                                     "name":  "Último erro"
+                                                 },
+                                  "version":  {
+                                                  "name":  "Versão"
+                                              },
+                                  "last_log_line":  {
+                                                        "name":  "Última linha do log"
+                                                    },
+                                  "last_request":  {
+                                                       "state":  {
+                                                                     "pending":  "Pendente",
+                                                                     "applied":  "Aplicado",
+                                                                     "rejected":  "Recusado",
+                                                                     "timeout":  "Sem resposta"
+                                                                 },
+                                                       "name":  "Último pedido"
+                                                   }
+                              },
+                   "text":  {
+                                "url":  {
+                                            "name":  "URL do repositório"
+                                        },
+                                "name":  {
+                                             "name":  "Nome do runner"
+                                         },
+                                "runner_image":  {
+                                                     "name":  "Imagem do runner"
+                                                 }
+                            }
+               },
+    "exceptions":  {
+                       "request_pending":  {
+                                               "message":  "Já existe um pedido pendente. Espere o runscaler responder."
+                                           },
+                       "invalid_config":  {
+                                              "message":  "Config inválida: {error}"
+                                          },
+                       "write_failed":  {
+                                            "message":  "Não foi possível gravar o pedido: {error}"
+                                        },
+                       "no_snapshot":  {
+                                           "message":  "O runscaler ainda não publicou a config atual."
+                                       }
+                   }
+}

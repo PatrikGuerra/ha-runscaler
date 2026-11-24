@@ -1,0 +1,50 @@
+# Example notifications for the Runscaler integration.
+# How to apply them: see "Notifications" in the README.
+# They notify through notify.persistent_notification (the bell in the sidebar), which every
+# Home Assistant has. To get them on your phone, replace it with your notify.mobile_app_<device>.
+- id: runscaler_disconnected
+  alias: Runscaler disconnected from GitHub
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.runscaler_connected
+      to: "off"
+      for: "00:05:00"
+    - trigger: state
+      entity_id: binary_sensor.runscaler_reachable
+      to: "off"
+      for: "00:05:00"
+  actions:
+    - action: notify.persistent_notification
+      data:
+        title: Runscaler
+        message: >-
+          The runner has been {{ 'unreachable' if trigger.entity_id.endswith('reachable')
+          else 'disconnected from GitHub' }} for 5 minutes.
+
+- id: runscaler_low_disk
+  alias: Runscaler low disk
+  # Only works when runscaler reports disk usage ([disk] guard = true in its config).
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.runscaler_disk_free
+      below: 15
+  actions:
+    - action: notify.persistent_notification
+      data:
+        title: Runscaler
+        message: "Free disk is {{ states('sensor.runscaler_disk_free') }}%."
+
+- id: runscaler_request_failed
+  alias: Runscaler request failed
+  triggers:
+    - trigger: event
+      event_type: runscaler_request_finished
+      event_data:
+        ok: false
+  actions:
+    - action: notify.persistent_notification
+      data:
+        title: Runscaler
+        message: >-
+          Request {{ trigger.event.data.kind }} was {{ trigger.event.data.state }}:
+          {{ trigger.event.data.error }}

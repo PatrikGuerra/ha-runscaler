@@ -1,0 +1,148 @@
+{
+    "config":  {
+                   "step":  {
+                                "user":  {
+                                             "title":  "Runscaler",
+                                             "description":  "Where Home Assistant finds runscaler\u0027s health endpoint and the shared exchange folder.",
+                                             "data":  {
+                                                          "health_url":  "Health URL",
+                                                          "exchange_dir":  "Exchange folder"
+                                                      }
+                                         }
+                            },
+                   "error":  {
+                                 "cannot_connect":  "Cannot reach the health URL.",
+                                 "no_snapshot":  "outbox/current-config.json was not found in the exchange folder."
+                             },
+                   "abort":  {
+                                 "already_configured":  "This exchange folder is already configured."
+                             }
+               },
+    "entity":  {
+                   "binary_sensor":  {
+                                         "reachable":  {
+                                                           "name":  "Reachable"
+                                                       },
+                                         "connected":  {
+                                                           "name":  "Connected to GitHub"
+                                                       },
+                                         "pending_changes":  {
+                                                                 "name":  "Unapplied changes"
+                                                             }
+                                     },
+                   "button":  {
+                                  "apply_config":  {
+                                                       "name":  "Apply config"
+                                                   },
+                                  "discard_changes":  {
+                                                          "name":  "Discard changes"
+                                                      },
+                                  "restart":  {
+                                                  "name":  "Restart (wait for jobs)"
+                                              },
+                                  "stop_now":  {
+                                                   "name":  "Stop now"
+                                               }
+                              },
+                   "number":  {
+                                  "max_runners":  {
+                                                      "name":  "Max runners"
+                                                  },
+                                  "concurrent":  {
+                                                     "name":  "Concurrent jobs"
+                                                 },
+                                  "min_runners":  {
+                                                      "name":  "Min runners"
+                                                  },
+                                  "docker_memory":  {
+                                                        "name":  "Runner memory"
+                                                    },
+                                  "docker_cpu":  {
+                                                     "name":  "Runner CPUs"
+                                                 },
+                                  "docker_pids_limit":  {
+                                                            "name":  "Runner PIDs limit"
+                                                        },
+                                  "drain_timeout":  {
+                                                        "name":  "Drain timeout"
+                                                    }
+                              },
+                   "select":  {
+                                  "log_level":  {
+                                                    "state":  {
+                                                                  "debug":  "Debug",
+                                                                  "info":  "Info",
+                                                                  "warn":  "Warn",
+                                                                  "error":  "Error"
+                                                              },
+                                                    "name":  "Log level"
+                                                }
+                              },
+                   "sensor":  {
+                                  "status":  {
+                                                 "name":  "Status"
+                                             },
+                                  "assigned_jobs":  {
+                                                        "name":  "Assigned jobs"
+                                                    },
+                                  "running_jobs":  {
+                                                       "name":  "Running jobs"
+                                                   },
+                                  "idle_runners":  {
+                                                       "name":  "Idle runners"
+                                                   },
+                                  "jobs_started":  {
+                                                       "name":  "Jobs started"
+                                                   },
+                                  "jobs_completed":  {
+                                                         "name":  "Jobs completed"
+                                                     },
+                                  "disk_free":  {
+                                                    "name":  "Free disk"
+                                                },
+                                  "last_error":  {
+                                                     "name":  "Last error"
+                                                 },
+                                  "version":  {
+                                                  "name":  "Version"
+                                              },
+                                  "last_log_line":  {
+                                                        "name":  "Last log line"
+                                                    },
+                                  "last_request":  {
+                                                       "state":  {
+                                                                     "pending":  "Pending",
+                                                                     "applied":  "Applied",
+                                                                     "rejected":  "Rejected",
+                                                                     "timeout":  "Timed out"
+                                                                 },
+                                                       "name":  "Last request"
+                                                   }
+                              },
+                   "text":  {
+                                "url":  {
+                                            "name":  "Repository URL"
+                                        },
+                                "name":  {
+                                             "name":  "Runner name"
+                                         },
+                                "runner_image":  {
+                                                     "name":  "Runner image"
+                                                 }
+                            }
+               },
+    "exceptions":  {
+                       "request_pending":  {
+                                               "message":  "A request is already pending. Wait for runscaler to answer."
+                                           },
+                       "invalid_config":  {
+                                              "message":  "Invalid config: {error}"
+                                          },
+                       "write_failed":  {
+                                            "message":  "Could not write the request: {error}"
+                                        },
+                       "no_snapshot":  {
+                                           "message":  "runscaler has not published its current config yet."
+                                       }
+                   }
+}
