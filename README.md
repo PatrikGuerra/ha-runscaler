@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/images/logo.svg" alt="ha-runscaler logo" width="160"></p>
+
 # ha-runscaler
 
 Home Assistant integration for [runscaler](https://github.com/PatrikGuerra/runscaler/tree/feature/homeassistant), a fork of [ysya/runscaler](https://github.com/ysya/runscaler) that runs ephemeral GitHub Actions runners as Docker containers.
