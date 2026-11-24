@@ -168,3 +168,7 @@ pytest -q
 ```
 
 `tests/test_exchange.py` does not need Home Assistant, so it runs on any Python 3.12+. The other tests use `pytest-homeassistant-custom-component`, which needs Python 3.14 and does not run on Windows. CI runs everything.
+
+## License
+
+[MIT](LICENSE). The runscaler fork this integration talks to has its own license, the [Sustainable Use License](https://github.com/PatrikGuerra/runscaler/blob/feature/homeassistant/LICENSE).
