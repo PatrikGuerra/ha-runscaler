@@ -35,7 +35,7 @@ A copy of the fork's contract lives in `tests/fixtures/contract/`, and the tests
 ## Requirements
 
 - Home Assistant **Container** 2026.11 or newer.
-- runscaler from the fork, with `RUNNER_EXCHANGE_DIR` set and `/healthz` published on `127.0.0.1:8089`. See [`deploy/homeassistant/README.md`](https://github.com/PatrikGuerra/runscaler/blob/feature/homeassistant/deploy/homeassistant/README.md) in the fork.
+- runscaler from the fork, with `RUNNER_EXCHANGE_DIR` set, `/healthz` published on `127.0.0.1:8089`, and `log-file = "/var/log/runner/runner.log"` with `exchange/logs` mounted there (runscaler running as root only logs under `/var/log`). See [`deploy/homeassistant/README.md`](https://github.com/PatrikGuerra/runscaler/blob/feature/homeassistant/deploy/homeassistant/README.md) in the fork.
 - The host folder `/opt/runscaler/exchange` mounted into the Home Assistant container at `/runscaler-exchange`.
 
 ## Install
@@ -79,6 +79,8 @@ Changing a field does **not** touch runscaler. It only changes a draft, and `bin
 - If runscaler rejects the request or does not answer within 120 s, Home Assistant shows a notification and fires the `runscaler_request_finished` event.
 
 ## Dashboard
+
+![Runscaler dashboard in Home Assistant](docs/screenshots/dashboard.png)
 
 `examples/dashboard.yaml` is a one-page dashboard with built-in cards only (no HACS):
 

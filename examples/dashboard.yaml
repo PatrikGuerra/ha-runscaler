@@ -10,12 +10,15 @@ views:
     badges:
       - type: entity
         entity: binary_sensor.runscaler_reachable
+        name: Reachable
         show_name: true
       - type: entity
         entity: binary_sensor.runscaler_connected
+        name: GitHub
         show_name: true
       - type: entity
         entity: sensor.runscaler_version
+        name: Version
         show_name: true
     sections:
       # ---- Status ----
@@ -26,26 +29,33 @@ views:
             icon: mdi:pulse
           - type: tile
             entity: sensor.runscaler_running_jobs
+            name: Running jobs
             icon: mdi:play-circle
             color: green
           - type: tile
             entity: sensor.runscaler_assigned_jobs
+            name: Assigned jobs
             icon: mdi:tray-full
             color: blue
           - type: tile
             entity: sensor.runscaler_idle_runners
+            name: Idle runners
             icon: mdi:sleep
           - type: tile
             entity: sensor.runscaler_status
+            name: Status
             icon: mdi:heart-pulse
           - type: tile
             entity: sensor.runscaler_jobs_started
+            name: Jobs started
             icon: mdi:counter
           - type: tile
             entity: sensor.runscaler_jobs_completed
+            name: Jobs completed
             icon: mdi:check-all
           - type: gauge
             entity: sensor.runscaler_disk_free
+            name: Free disk
             min: 0
             max: 100
             severity: { red: 0, yellow: 15, green: 30 }
@@ -56,6 +66,7 @@ views:
                 state_not: unknown
           - type: tile
             entity: sensor.runscaler_last_error
+            name: Last error
             icon: mdi:alert-circle
             color: red
             grid_options: { columns: 12 }
@@ -69,7 +80,9 @@ views:
             grid_options: { columns: 12 }
             entities:
               - entity: sensor.runscaler_running_jobs
+                name: Running
               - entity: sensor.runscaler_assigned_jobs
+                name: Assigned
 
       # ---- Config ----
       - type: grid
@@ -94,39 +107,51 @@ views:
                 state: "on"
           - type: tile
             entity: number.runscaler_docker_memory
+            name: Memory per runner
             grid_options: { columns: 12 }
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: number.runscaler_docker_cpu
+            name: CPUs
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: number.runscaler_docker_pids_limit
+            name: PIDs limit
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: number.runscaler_max_runners
+            name: Max runners
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: number.runscaler_concurrent
+            name: Concurrent
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: number.runscaler_min_runners
+            name: Min runners
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: number.runscaler_drain_timeout
+            name: Drain timeout
             features: [{ type: numeric-input, style: buttons }]
           - type: tile
             entity: select.runscaler_log_level
+            name: Log level
             grid_options: { columns: 12 }
             features: [{ type: select-options }]
           - type: entities
             grid_options: { columns: 12 }
             entities:
-              - text.runscaler_url
-              - text.runscaler_name
-              - text.runscaler_runner_image
+              - entity: text.runscaler_url
+                name: Repository
+              - entity: text.runscaler_name
+                name: Runner name
+              - entity: text.runscaler_runner_image
+                name: Runner image
           - type: tile
             entity: button.runscaler_apply_config
             name: Apply
+            hide_state: true
             icon: mdi:content-save-check
             color: green
             tap_action:
@@ -138,6 +163,7 @@ views:
           - type: tile
             entity: button.runscaler_discard_changes
             name: Discard
+            hide_state: true
             icon: mdi:undo
             tap_action:
               action: perform-action
@@ -145,6 +171,7 @@ views:
               target: { entity_id: button.runscaler_discard_changes }
           - type: tile
             entity: sensor.runscaler_last_request
+            name: Last request
             icon: mdi:send-check
             grid_options: { columns: 12 }
 
@@ -157,6 +184,7 @@ views:
           - type: tile
             entity: button.runscaler_restart
             name: Restart
+            hide_state: true
             icon: mdi:restart
             color: blue
             tap_action:
@@ -168,6 +196,7 @@ views:
           - type: tile
             entity: button.runscaler_stop_now
             name: Stop now
+            hide_state: true
             icon: mdi:stop-circle
             color: red
             tap_action:
