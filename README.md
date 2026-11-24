@@ -78,10 +78,57 @@ Changing a field does **not** touch runscaler. It only changes a draft, and `bin
 - Only one request can be pending. A second one fails until the first gets an answer.
 - If runscaler rejects the request or does not answer within 120 s, Home Assistant shows a notification and fires the `runscaler_request_finished` event.
 
-## Examples
+## Dashboard
 
-- `examples/dashboard.yaml`: a dashboard with Status, Config, Actions and Logs views. The buttons ask for confirmation. Paste it in **Edit dashboard → ⋮ → Raw configuration editor** of a new, empty dashboard.
-- `examples/automations.yaml`: notifications for a lost GitHub connection, low disk and rejected requests.
+`examples/dashboard.yaml` is a one-page dashboard with built-in cards only (no HACS):
+
+| Section | Shows |
+|---|---|
+| Badges | Reachable, connected to GitHub, version |
+| Status | Running and assigned jobs, idle runners, counters, disk gauge, last error (only when there is one), 48 h job graph |
+| Config | Draft fields with +/- buttons, log level picker, text fields, **Apply** and **Discard**, last request |
+| Actions | **Restart** and **Stop now**, both with a confirmation |
+| Log | Last 25 log lines |
+
+To apply it:
+
+1. Go to **Settings → Dashboards → Add dashboard → New dashboard from scratch**. Name it `Runscaler` and click **Create**.
+2. Open the new dashboard and click the pencil (**Edit dashboard**).
+3. Click **⋮ → Raw configuration editor**.
+4. Delete everything there and paste the content of `examples/dashboard.yaml`.
+5. Click **Save**, then close the editor (X).
+
+Use a **new** dashboard. The raw editor replaces the whole dashboard, so pasting into an existing one deletes its cards.
+
+If you see `No type provided`, you pasted it into a single card's editor. Use the raw configuration editor of the dashboard instead. If you see `Entity not available`, the integration is not set up yet.
+
+## Notifications
+
+`examples/automations.yaml` has three automations:
+
+| Automation | Fires when |
+|---|---|
+| `Runscaler disconnected from GitHub` | runscaler is unreachable or disconnected for 5 minutes |
+| `Runscaler low disk` | Free disk drops below 15% (needs `[disk] guard = true` in runscaler) |
+| `Runscaler request failed` | A request ends as `rejected` or `timeout` |
+
+They notify through `notify.persistent_notification`, the bell in the sidebar. To get them on your phone, install the Home Assistant Companion app, then use its action instead. Find its name in **Developer tools → Actions** by searching `notify.mobile_app`.
+
+To apply them, one at a time, in the UI:
+
+1. Go to **Settings → Automations & scenes → Create automation → Create new automation**.
+2. Click **⋮ → Edit in YAML**.
+3. Delete everything there and paste **one** automation from the file, without the leading `- `, and with its lines moved two spaces left.
+4. Optional: change `notify.persistent_notification` to your `notify.mobile_app_<device>`.
+5. Click **Save**. Repeat for the other two.
+
+Or all at once, in the file:
+
+1. Append the content of `examples/automations.yaml` to `/config/automations.yaml`. Keep what is already there. The `id` values must not repeat.
+2. Go to **Developer tools → YAML → Check configuration**.
+3. Click **Automations** under **YAML configuration reloading**.
+
+To test a notification, open the automation, click **⋮ → Run actions**, and check the bell.
 
 ## Security
 

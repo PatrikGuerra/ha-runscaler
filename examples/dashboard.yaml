@@ -1,77 +1,187 @@
-# Example dashboard. In Home Assistant: Settings > Dashboards > Add > New from scratch,
-# then the three dots > Edit > Raw configuration editor, and paste this.
+# Example dashboard for the Runscaler integration. Built-in cards only, no HACS.
+# How to apply it: see "Dashboard" in the README.
 title: Runscaler
 views:
-  - title: Status
-    path: status
-    cards:
-      - type: entities
-        entities:
-          - binary_sensor.runscaler_reachable
-          - binary_sensor.runscaler_connected
-          - sensor.runscaler_status
-          - sensor.runscaler_assigned_jobs
-          - sensor.runscaler_running_jobs
-          - sensor.runscaler_idle_runners
-          - sensor.runscaler_disk_free
-          - sensor.runscaler_last_error
-          - sensor.runscaler_version
-      - type: history-graph
-        hours_to_show: 48
-        entities:
-          - sensor.runscaler_running_jobs
-          - sensor.runscaler_jobs_completed
-  - title: Config
-    path: config
-    cards:
-      - type: entities
-        entities:
-          - text.runscaler_url
-          - text.runscaler_name
-          - number.runscaler_max_runners
-          - number.runscaler_concurrent
-          - number.runscaler_min_runners
-          - number.runscaler_docker_memory
-          - number.runscaler_docker_cpu
-          - number.runscaler_docker_pids_limit
-          - number.runscaler_drain_timeout
-          - text.runscaler_runner_image
-          - select.runscaler_log_level
-          - binary_sensor.runscaler_pending_changes
-          - sensor.runscaler_last_request
-      - type: horizontal-stack
+  - title: Runscaler
+    path: runscaler
+    icon: mdi:github
+    type: sections
+    max_columns: 3
+    badges:
+      - type: entity
+        entity: binary_sensor.runscaler_reachable
+        show_name: true
+      - type: entity
+        entity: binary_sensor.runscaler_connected
+        show_name: true
+      - type: entity
+        entity: sensor.runscaler_version
+        show_name: true
+    sections:
+      # ---- Status ----
+      - type: grid
         cards:
-          - type: button
+          - type: heading
+            heading: Status
+            icon: mdi:pulse
+          - type: tile
+            entity: sensor.runscaler_running_jobs
+            icon: mdi:play-circle
+            color: green
+          - type: tile
+            entity: sensor.runscaler_assigned_jobs
+            icon: mdi:tray-full
+            color: blue
+          - type: tile
+            entity: sensor.runscaler_idle_runners
+            icon: mdi:sleep
+          - type: tile
+            entity: sensor.runscaler_status
+            icon: mdi:heart-pulse
+          - type: tile
+            entity: sensor.runscaler_jobs_started
+            icon: mdi:counter
+          - type: tile
+            entity: sensor.runscaler_jobs_completed
+            icon: mdi:check-all
+          - type: gauge
+            entity: sensor.runscaler_disk_free
+            min: 0
+            max: 100
+            severity: { red: 0, yellow: 15, green: 30 }
+            grid_options: { columns: 12 }
+            visibility:
+              - condition: state
+                entity: sensor.runscaler_disk_free
+                state_not: unknown
+          - type: tile
+            entity: sensor.runscaler_last_error
+            icon: mdi:alert-circle
+            color: red
+            grid_options: { columns: 12 }
+            visibility:
+              - condition: state
+                entity: sensor.runscaler_last_error
+                state_not: unknown
+          - type: history-graph
+            title: Jobs (48 h)
+            hours_to_show: 48
+            grid_options: { columns: 12 }
+            entities:
+              - entity: sensor.runscaler_running_jobs
+              - entity: sensor.runscaler_assigned_jobs
+
+      # ---- Config ----
+      - type: grid
+        cards:
+          - type: heading
+            heading: Config
+            icon: mdi:tune
+          - type: markdown
+            grid_options: { columns: 12 }
+            content: >-
+              Changes stay in a **draft** until you press **Apply**.
+              Apply restarts runscaler after the running jobs finish.
+          - type: tile
+            entity: binary_sensor.runscaler_pending_changes
+            name: Unapplied changes
+            icon: mdi:pencil-circle
+            color: amber
+            grid_options: { columns: 12 }
+            visibility:
+              - condition: state
+                entity: binary_sensor.runscaler_pending_changes
+                state: "on"
+          - type: tile
+            entity: number.runscaler_docker_memory
+            grid_options: { columns: 12 }
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: number.runscaler_docker_cpu
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: number.runscaler_docker_pids_limit
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: number.runscaler_max_runners
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: number.runscaler_concurrent
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: number.runscaler_min_runners
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: number.runscaler_drain_timeout
+            features: [{ type: numeric-input, style: buttons }]
+          - type: tile
+            entity: select.runscaler_log_level
+            grid_options: { columns: 12 }
+            features: [{ type: select-options }]
+          - type: entities
+            grid_options: { columns: 12 }
+            entities:
+              - text.runscaler_url
+              - text.runscaler_name
+              - text.runscaler_runner_image
+          - type: tile
             entity: button.runscaler_apply_config
+            name: Apply
+            icon: mdi:content-save-check
+            color: green
             tap_action:
-              action: toggle
+              action: perform-action
+              perform_action: button.press
+              target: { entity_id: button.runscaler_apply_config }
               confirmation:
-                text: Apply and restart runscaler? It waits for running jobs.
-          - type: button
+                text: Apply the draft? runscaler restarts after the running jobs finish.
+          - type: tile
             entity: button.runscaler_discard_changes
-            tap_action: { action: toggle }
-  - title: Actions
-    path: actions
-    cards:
-      - type: horizontal-stack
+            name: Discard
+            icon: mdi:undo
+            tap_action:
+              action: perform-action
+              perform_action: button.press
+              target: { entity_id: button.runscaler_discard_changes }
+          - type: tile
+            entity: sensor.runscaler_last_request
+            icon: mdi:send-check
+            grid_options: { columns: 12 }
+
+      # ---- Actions and log ----
+      - type: grid
         cards:
-          - type: button
+          - type: heading
+            heading: Actions
+            icon: mdi:power
+          - type: tile
             entity: button.runscaler_restart
+            name: Restart
+            icon: mdi:restart
+            color: blue
             tap_action:
-              action: toggle
+              action: perform-action
+              perform_action: button.press
+              target: { entity_id: button.runscaler_restart }
               confirmation:
-                text: Restart runscaler? It waits for running jobs.
-          - type: button
+                text: Restart runscaler? It waits for running jobs to finish.
+          - type: tile
             entity: button.runscaler_stop_now
+            name: Stop now
+            icon: mdi:stop-circle
+            color: red
             tap_action:
-              action: toggle
+              action: perform-action
+              perform_action: button.press
+              target: { entity_id: button.runscaler_stop_now }
               confirmation:
                 text: Stop now? Running jobs are killed.
-  - title: Logs
-    path: logs
-    cards:
-      - type: markdown
-        content: |
-          ```
-          {{ (state_attr('sensor.runscaler_last_log_line', 'lines') or []) | join('\n') }}
-          ```
+          - type: heading
+            heading: Log
+            icon: mdi:text-box-outline
+          - type: markdown
+            grid_options: { columns: 12 }
+            content: |
+              ```
+              {{ (state_attr('sensor.runscaler_last_log_line', 'lines') or ['(no log yet)'])[-25:] | join('\n') }}
+              ```
